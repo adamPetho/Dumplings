@@ -132,7 +132,9 @@ namespace Dumplings.Scanning
                                     && inputCount >= 50 // 50 was the minimum input count at the beginning of Wasabi 2.
                                     && inputValues.SequenceEqual(inputValues.OrderByDescending(x => x)) // Inputs are ordered descending.
                                     && outputValues.SequenceEqual(outputValues.OrderByDescending(x => x)) // Outputs are ordered descending.
-                                    && outputValues.Count(x => Wasabi2Denominations.Contains(x.Satoshi)) > outputCount * 0.8; // Most of the outputs contains the denomination.
+                                    && outputValues.Count(x => Wasabi2Denominations.Contains(x.Satoshi)) > outputCount * 0.8 // Most of the outputs contains the denomination.
+                                    && inputs.All(input => input.PubkeyType == RpcPubkeyType.TxWitnessV0Keyhash)
+                                    && outputs.All(output => output.PubkeyType == RpcPubkeyType.TxWitnessV0Keyhash);
                             }
 
                             // IDENTIFY WASABI COINJOINS
@@ -151,7 +153,9 @@ namespace Dumplings.Scanning
                                         && mostFrequentEqualOutputCount >= 10 // At least 10 equal outputs.
                                         && inputCount >= mostFrequentEqualOutputCount // More inptuts than most frequent equal outputs.
                                         && mostFrequentEqualOutputValue.Almost(Constants.ApproximateWasabiBaseDenomination, Constants.WasabiBaseDenominationPrecision) // The most frequent equal outputs must be almost the base denomination.
-                                        && uniqueOutputCount >= 2; // It's very likely there's at least one change and at least one coord output those have unique values.
+                                        && uniqueOutputCount >= 2 // It's very likely there's at least one change and at least one coord output those have unique values.
+                                        && inputs.All(input => input.PubkeyType == RpcPubkeyType.TxWitnessV0Keyhash)
+                                        && outputs.All(output => output.PubkeyType == RpcPubkeyType.TxWitnessV0Keyhash);
                                 }
                             }
 
